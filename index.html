@@ -32,238 +32,850 @@ th,td{padding:10px 8px;border-bottom:1px solid #eaecf0;text-align:left;font-size
 <link rel="apple-touch-icon" href="icon-192.png">
 </head>
 <body>
-<div class="nca-brand"><div class="nca-mark">NCA</div><div class="nca-name">NUEVO CENTRAL ARGENTINO</div></div>
+
+<div class="nca-brand">
+<div class="nca-mark">NCA</div>
+<div class="nca-name">NUEVO CENTRAL ARGENTINO</div>
+</div>
+
 <div class="container">
 
 <div class="card">
 <h1>🚆 Control de Horas NCA</h1>
 <div class="sub" id="subtituloMes">Septiembre 2026 · horas trabajadas, descansos, bases y liquidación</div>
+
 <h2>Cargar servicio</h2>
+
 <div class="grid">
-<div><label>Fecha</label><input id="fecha" type="date"></div>
-<div><label>Base de tomada</label><select id="baseTomada"><option>CEVIL POZO</option><option>LA BANDA</option><option>COLONIA DORA</option><option>CERES</option><option>RAFAELA</option></select></div>
-<div><label>Base de dejada / finalizada</label><select id="baseFinalizada"><option>CEVIL POZO</option><option>LA BANDA</option><option>COLONIA DORA</option><option>CERES</option><option>RAFAELA</option></select></div>
-<div><label>Tipo de servicio</label><select id="tipo"><option value="local">LOCAL</option><option value="pernoctada">PERNOCTADA</option></select></div>
-<div><label>Categoría</label><select id="categoria"><option value="conductor">CONDUCTOR</option><option value="ayudante_habilitado">AYUDANTE DE CONDUCTOR HABILITADO</option><option value="ayudante">AYUDANTE DE CONDUCTOR</option></select></div>
-<div><label>Hora de inicio</label><input id="inicio" type="time"></div>
-<div><label>Hora de finalización</label><input id="fin" type="time"></div>
-<div><label>Horas de descanso / viático</label><input id="descH" type="number" min="0" step="1" value="0"></div>
-<div><label>Minutos de descanso / viático</label><input id="descM" type="number" min="0" max="59" step="1" value="0"></div>
-<div><label>Horas adicionales / extras</label><input id="extraH" type="number" min="0" step="1" value="0"></div>
-<div><label>Minutos adicionales / extras</label><input id="extraM" type="number" min="0" max="59" step="1" value="0"></div>
+
+<div>
+<label>Fecha</label>
+<input id="fecha" type="date">
 </div>
+
+<div>
+<label>Base de tomada</label>
+<select id="baseTomada">
+<option>CEVIL POZO</option>
+<option>LA BANDA</option>
+<option>COLONIA DORA</option>
+<option>CERES</option>
+<option>RAFAELA</option>
+</select>
+</div>
+
+<div>
+<label>Base de dejada / finalizada</label>
+<select id="baseFinalizada">
+<option>CEVIL POZO</option>
+<option>LA BANDA</option>
+<option>COLONIA DORA</option>
+<option>CERES</option>
+<option>RAFAELA</option>
+</select>
+</div>
+
+<div>
+<label>Tipo de servicio</label>
+<select id="tipo">
+<option value="local">LOCAL</option>
+<option value="pernoctada">PERNOCTADA</option>
+</select>
+</div>
+
+<div>
+<label>Categoría</label>
+<select id="categoria">
+<option value="conductor">CONDUCTOR</option>
+<option value="ayudante_habilitado">AYUDANTE DE CONDUCTOR HABILITADO</option>
+<option value="ayudante">AYUDANTE DE CONDUCTOR</option>
+</select>
+</div>
+
+<div>
+<label>Hora de inicio</label>
+<input id="inicio" type="time">
+</div>
+
+<div>
+<label>Hora de finalización</label>
+<input id="fin" type="time">
+</div>
+
+<div>
+<label>Horas de descanso / viático</label>
+<input id="descH" type="number" min="0" step="1" value="0">
+</div>
+
+<div>
+<label>Minutos de descanso / viático</label>
+<input id="descM" type="number" min="0" max="59" step="1" value="0">
+</div>
+
+<div>
+<label>Horas adicionales / extras</label>
+<input id="extraH" type="number" min="0" step="1" value="0">
+</div>
+
+<div>
+<label>Minutos adicionales / extras</label>
+<input id="extraM" type="number" min="0" max="59" step="1" value="0">
+</div>
+
+</div>
+
 <div class="actions">
-<button onclick="calcular()">Calcular servicio</button><button class="secondary" onclick="guardar()">Guardar servicio</button>
-<button class="secondary" onclick="exportarCSV()">Exportar CSV</button><button class="danger" onclick="limpiarTodo()">Borrar registros</button>
+<button onclick="calcular()">Calcular servicio</button>
+<button class="secondary" onclick="guardar()">Guardar servicio</button>
+<button class="secondary" onclick="exportarCSV()">Exportar CSV</button>
+<button class="danger" onclick="limpiarTodo()">Borrar registros</button>
 </div>
+
 <div class="result" style="margin-top:16px">
-<div class="box"><small>Tiempo total de presencia</small><strong id="presencia">0 h 0 min</strong></div>
-<div class="box"><small>Descanso</small><strong id="descanso">0 h 0 min</strong></div>
-<div class="box"><small>Horas efectivas trabajadas</small><strong id="trabajadas">0 h 0 min</strong></div>
-<div class="box"><small>Horas adicionales / extras</small><strong id="extras">0 h 0 min</strong></div>
-<div class="box"><small>Valor extras</small><strong id="valorExtras">$0</strong></div>
-<div class="box"><small>Descanso como viático</small><strong id="descansoViatico">0 h 0 min</strong></div>
-<div class="box"><small>Viático por horas</small><strong id="valorDescansoViatico">$0</strong></div>
-<div class="box"><small>Valor aplicado</small><strong id="valorAplicado">$0</strong></div>
-<div class="box total"><small>Total del servicio</small><strong id="total">$0</strong></div>
+
+<div class="box">
+<small>Tiempo total de presencia</small>
+<strong id="presencia">0 h 0 min</strong>
 </div>
-<div class="note">Septiembre 2026: <b>servicio LOCAL $20.990</b> · <b>pernoctada diaria $93.261</b> · <b>hora de pernoctada $3.885</b> · <b>traslado $1.623</b>. Las horas extras se calculan aparte: LOCAL $20.990/h · PERNOCTADA $3.885/h.</div>
+
+<div class="box">
+<small>Descanso</small>
+<strong id="descanso">0 h 0 min</strong>
+</div>
+
+<div class="box">
+<small>Horas efectivas trabajadas</small>
+<strong id="trabajadas">0 h 0 min</strong>
+</div>
+
+<div class="box">
+<small>Horas adicionales / extras</small>
+<strong id="extras">0 h 0 min</strong>
+</div>
+
+<div class="box">
+<small>Valor extras</small>
+<strong id="valorExtras">$0</strong>
+</div>
+
+<div class="box">
+<small>Descanso como viático</small>
+<strong id="descansoViatico">0 h 0 min</strong>
+</div>
+
+<div class="box">
+<small>Viático por horas</small>
+<strong id="valorDescansoViatico">$0</strong>
+</div>
+
+<div class="box">
+<small>Valor aplicado</small>
+<strong id="valorAplicado">$0</strong>
+</div>
+
+<div class="box total">
+<small>Total del servicio</small>
+<strong id="total">$0</strong>
+</div>
+
+</div>
+
+<div class="note">
+Septiembre 2026:
+<b>servicio LOCAL $20.990</b> ·
+<b>pernoctada diaria $93.261</b> ·
+<b>hora de pernoctada $3.885</b> ·
+<b>traslado $1.623</b>.
+Las horas extras se calculan aparte:
+LOCAL $20.990/h · PERNOCTADA $3.885/h.
+</div>
+
 </div>
 
 <div class="card">
+
 <h2>💰 Valores por mes</h2>
+
 <div class="grid">
-<div><label>Mes de trabajo</label><input id="mesValores" type="month"></div>
-<div><label>Valor servicio LOCAL</label><input id="vLocal" type="number" min="0" step="1"></div>
-<div><label>Pernoctada diaria</label><input id="vPernoctada" type="number" min="0" step="1"></div>
-<div><label>Hora de pernoctada</label><input id="vPernoHora" type="number" min="0" step="1"></div>
-<div><label>Valor hora adicional / extra</label><input id="vExtra" type="number" min="0" step="1"></div>
-<div><label>Traslado</label><input id="vTraslado" type="number" min="0" step="1"></div>
-<div><label>Básico CONDUCTOR</label><input id="basicoConductor" type="number" min="0" step="1"></div>
-<div><label>Básico AYUDANTE DE CONDUCTOR HABILITADO</label><input id="basicoAyudanteHabilitado" type="number" min="0" step="1"></div>
-<div><label>Básico AYUDANTE DE CONDUCTOR</label><input id="basicoAyudante" type="number" min="0" step="1"></div>
-</div>
-<div class="actions"><button onclick="guardarValoresMes()">Guardar valores del mes</button><button class="secondary" onclick="cargarValoresMes()">Cargar valores</button></div>
-<div class="note">Cada mes puede tener sus propios valores. Los servicios guardados conservan los valores aplicados al momento de calcularlos.</div>
+
+<div>
+<label>Mes de trabajo</label>
+<input id="mesValores" type="month">
 </div>
 
-<div class="card"><h2>📋 Servicios registrados</h2><div class="table-wrap"><table><thead><tr>
-<th>Fecha</th><th>Base tomada</th><th>Base dejada / finalizada</th><th>Servicio</th><th>Categoría</th><th>Inicio</th><th>Fin</th><th>Descanso</th><th>Trabajadas</th><th>Descanso viático</th><th>Extras</th><th>Valor extras</th><th>Total</th><th></th>
-</tr></thead><tbody id="tabla"></tbody></table></div></div>
+<div>
+<label>Valor servicio LOCAL</label>
+<input id="vLocal" type="number" min="0" step="1">
+</div>
+
+<div>
+<label>Pernoctada diaria</label>
+<input id="vPernoctada" type="number" min="0" step="1">
+</div>
+
+<div>
+<label>Hora de pernoctada</label>
+<input id="vPernoHora" type="number" min="0" step="1">
+</div>
+
+<div>
+<label>Valor hora adicional / extra</label>
+<input id="vExtra" type="number" min="0" step="1">
+</div>
+
+<div>
+<label>Traslado</label>
+<input id="vTraslado" type="number" min="0" step="1">
+</div>
+
+<div>
+<label>Básico CONDUCTOR</label>
+<input id="basicoConductor" type="number" min="0" step="1">
+</div>
+
+<div>
+<label>Básico AYUDANTE DE CONDUCTOR HABILITADO</label>
+<input id="basicoAyudanteHabilitado" type="number" min="0" step="1">
+</div>
+
+<div>
+<label>Básico AYUDANTE DE CONDUCTOR</label>
+<input id="basicoAyudante" type="number" min="0" step="1">
+</div>
+
+</div>
+
+<div class="actions">
+<button onclick="guardarValoresMes()">Guardar valores del mes</button>
+<button class="secondary" onclick="cargarValoresMes()">Cargar valores</button>
+</div>
+
+<div class="note">
+Cada mes puede tener sus propios valores.
+Los servicios guardados conservan los valores aplicados al momento de calcularlos.
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>📋 Servicios registrados</h2>
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>Fecha</th>
+<th>Base tomada</th>
+<th>Base dejada / finalizada</th>
+<th>Servicio</th>
+<th>Categoría</th>
+<th>Inicio</th>
+<th>Fin</th>
+<th>Descanso</th>
+<th>Trabajadas</th>
+<th>Descanso viático</th>
+<th>Extras</th>
+<th>Valor extras</th>
+<th>Total</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody id="tabla"></tbody>
+
+</table>
+
+</div>
+</div>
+
 </div>
 
 <script>
+
 const CLAVE_REGISTROS='nca_registros';
 const CLAVE_VALORES='nca_valores_mensuales';
 
 const VALORES_SEPTIEMBRE={
-  local:20990, pernoctada:93261, pernoHora:3885, extra:20990, traslado:1623,
-  basicos:{conductor:1875963,ayudante_habilitado:1644339,ayudante:1461876}
+local:20990,
+pernoctada:93261,
+pernoHora:3885,
+extra:20990,
+traslado:1623,
+basicos:{
+conductor:1875963,
+ayudante_habilitado:1644339,
+ayudante:1461876
+}
 };
+
 const NOMBRES_CATEGORIA={
-  conductor:'CONDUCTOR',
-  ayudante_habilitado:'AYUDANTE DE CONDUCTOR HABILITADO',
-  ayudante:'AYUDANTE DE CONDUCTOR'
+conductor:'CONDUCTOR',
+ayudante_habilitado:'AYUDANTE DE CONDUCTOR HABILITADO',
+ayudante:'AYUDANTE DE CONDUCTOR'
 };
 
 let registros=JSON.parse(localStorage.getItem(CLAVE_REGISTROS)||'[]');
 let valoresMensuales=JSON.parse(localStorage.getItem(CLAVE_VALORES)||'{}');
 let ultimo=null;
 
-function money(n){return '$'+Math.round(Number(n)||0).toLocaleString('es-AR')}
-function mesActual(){const f=document.getElementById('fecha').value;return f?f.slice(0,7):'2026-09'}
-function nombreMes(m){if(!m)return '';const [y,mm]=m.split('-').map(Number);const n=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];return n[mm-1]+' '+y}
-function minutosEntre(a,b){let [h1,m1]=a.split(':').map(Number),[h2,m2]=b.split(':').map(Number);let x=h1*60+m1,y=h2*60+m2;if(y<x)y+=1440;return y-x}
-function fmt(min){min=Math.max(0,Math.round(min));return Math.floor(min/60)+' h '+(min%60)+' min'}
+function money(n){
+return '$'+Math.round(Number(n)||0).toLocaleString('es-AR')
+}
+
+function mesActual(){
+const f=document.getElementById('fecha').value;
+return f?f.slice(0,7):'2026-09'
+}
+
+function nombreMes(m){
+if(!m)return '';
+const [y,mm]=m.split('-').map(Number);
+const n=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+return n[mm-1]+' '+y
+}
+
+function minutosEntre(a,b){
+let [h1,m1]=a.split(':').map(Number),
+[h2,m2]=b.split(':').map(Number);
+let x=h1*60+m1,y=h2*60+m2;
+if(y<x)y+=1440;
+return y-x
+}
+
+function fmt(min){
+min=Math.max(0,Math.round(min));
+return Math.floor(min/60)+' h '+(min%60)+' min'
+}
 
 function valoresBaseParaMes(mes){
-  if(valoresMensuales[mes])return {...valoresMensuales[mes]};
-  const meses=Object.keys(valoresMensuales).sort();
-  if(meses.length)return {...valoresMensuales[meses[meses.length-1]]};
-  return JSON.parse(JSON.stringify(VALORES_SEPTIEMBRE));
+if(valoresMensuales[mes])return {...valoresMensuales[mes]};
+const meses=Object.keys(valoresMensuales).sort();
+if(meses.length)return {...valoresMensuales[meses[meses.length-1]]};
+return JSON.parse(JSON.stringify(VALORES_SEPTIEMBRE));
 }
+
 function valoresDeServicio(){
-  return valoresBaseParaMes(mesActual());
+return valoresBaseParaMes(mesActual());
 }
+
 function basicoDeCategoria(v,categoria){
-  if(v.basicos && v.basicos[categoria]!=null)return Number(v.basicos[categoria]);
-  if(categoria==='conductor')return 1875963;
-  if(categoria==='ayudante_habilitado')return 1644339;
-  return 1461876;
+if(v.basicos && v.basicos[categoria]!=null)
+return Number(v.basicos[categoria]);
+
+if(categoria==='conductor')return 1875963;
+if(categoria==='ayudante_habilitado')return 1644339;
+return 1461876;
 }
+
 function cargarCamposDeValores(v){
-  document.getElementById('vLocal').value=v.local??20990;
-  document.getElementById('vPernoctada').value=v.pernoctada??93261;
-  document.getElementById('vPernoHora').value=v.pernoHora??3885;
-  document.getElementById('vExtra').value=v.extra??20990;
-  document.getElementById('vTraslado').value=v.traslado??1623;
-  document.getElementById('basicoConductor').value=basicoDeCategoria(v,'conductor');
-  document.getElementById('basicoAyudanteHabilitado').value=basicoDeCategoria(v,'ayudante_habilitado');
-  document.getElementById('basicoAyudante').value=basicoDeCategoria(v,'ayudante');
+
+document.getElementById('vLocal').value=v.local??20990;
+document.getElementById('vPernoctada').value=v.pernoctada??93261;
+document.getElementById('vPernoHora').value=v.pernoHora??3885;
+document.getElementById('vExtra').value=v.extra??20990;
+document.getElementById('vTraslado').value=v.traslado??1623;
+
+document.getElementById('basicoConductor').value=
+basicoDeCategoria(v,'conductor');
+
+document.getElementById('basicoAyudanteHabilitado').value=
+basicoDeCategoria(v,'ayudante_habilitado');
+
+document.getElementById('basicoAyudante').value=
+basicoDeCategoria(v,'ayudante');
 }
+
 function guardarValoresMes(){
-  const mes=document.getElementById('mesValores').value||mesActual();
-  valoresMensuales[mes]={
-    local:Number(document.getElementById('vLocal').value||0),
-    pernoctada:Number(document.getElementById('vPernoctada').value||0),
-    pernoHora:Number(document.getElementById('vPernoHora').value||0),
-    extra:Number(document.getElementById('vExtra').value||0),
-    traslado:Number(document.getElementById('vTraslado').value||0),
-    basicos:{
-      conductor:Number(document.getElementById('basicoConductor').value||0),
-      ayudante_habilitado:Number(document.getElementById('basicoAyudanteHabilitado').value||0),
-      ayudante:Number(document.getElementById('basicoAyudante').value||0)
-    }
-  };
-  localStorage.setItem(CLAVE_VALORES,JSON.stringify(valoresMensuales));
-  alert('Valores guardados para '+nombreMes(mes)+'.');
+
+const mes=document.getElementById('mesValores').value||mesActual();
+
+valoresMensuales[mes]={
+local:Number(document.getElementById('vLocal').value||0),
+pernoctada:Number(document.getElementById('vPernoctada').value||0),
+pernoHora:Number(document.getElementById('vPernoHora').value||0),
+extra:Number(document.getElementById('vExtra').value||0),
+traslado:Number(document.getElementById('vTraslado').value||0),
+
+basicos:{
+conductor:Number(document.getElementById('basicoConductor').value||0),
+ayudante_habilitado:Number(document.getElementById('basicoAyudanteHabilitado').value||0),
+ayudante:Number(document.getElementById('basicoAyudante').value||0)
 }
+};
+
+localStorage.setItem(
+CLAVE_VALORES,
+JSON.stringify(valoresMensuales)
+);
+
+alert('Valores guardados para '+nombreMes(mes)+'.');
+}
+
 function cargarValoresMes(){
-  const mes=document.getElementById('mesValores').value||mesActual();
-  document.getElementById('mesValores').value=mes;
-  cargarCamposDeValores(valoresBaseParaMes(mes));
+
+const mes=document.getElementById('mesValores').value||mesActual();
+
+document.getElementById('mesValores').value=mes;
+
+cargarCamposDeValores(valoresBaseParaMes(mes));
 }
-function actualizarSubtitulo(){document.getElementById('subtituloMes').textContent=nombreMes(mesActual())+' · horas trabajadas, descansos, bases y liquidación'}
+
+function actualizarSubtitulo(){
+
+document.getElementById('subtituloMes').textContent=
+nombreMes(mesActual())+
+' · horas trabajadas, descansos, bases y liquidación';
+}
 
 function calcular(){
-  const inicio=document.getElementById('inicio').value,fin=document.getElementById('fin').value;
-  if(!inicio||!fin){alert('Ingresá la hora de inicio y finalización.');return null}
-  const tipo=document.getElementById('tipo').value;
-  const categoria=document.getElementById('categoria').value;
-  const mes=mesActual();
-  const v=valoresDeServicio();
-  const presencia=minutosEntre(inicio,fin);
-  const descanso=Math.max(0,Number(document.getElementById('descH').value||0)*60+Number(document.getElementById('descM').value||0));
 
-  let trabajadas;
-  if(tipo==='pernoctada') trabajadas=presencia;
-  else{
-    if(descanso>presencia){alert('En un servicio LOCAL, el descanso no puede superar el tiempo total de presencia.');return null}
-    trabajadas=presencia-descanso;
-  }
+const inicio=document.getElementById('inicio').value,
+fin=document.getElementById('fin').value;
 
-  const extraMin=Math.max(0,Number(document.getElementById('extraH').value||0)*60+Number(document.getElementById('extraM').value||0));
-  let baseTotal=0,descansoViatico=0,valorTexto='';
-
-  if(tipo==='local'){
-    // LOCAL = valor fijo por servicio. Las horas solo se controlan.
-    baseTotal=Number(v.local)||0;
-    valorTexto=money(v.local)+' por servicio';
-  }else{
-    // PERNOCTADA = diario + horas de servicio a $3.885/h + descanso a $3.885/h.
-    descansoViatico=descanso/60*(Number(v.pernoHora)||0);
-    baseTotal=(Number(v.pernoctada)||0)+(trabajadas/60*(Number(v.pernoHora)||0))+descansoViatico;
-    valorTexto=money(v.pernoctada)+' + '+money(v.pernoHora)+'/h + descanso';
-  }
-
-  // Las horas extras dependen del tipo de servicio:
-  // LOCAL: $20.990 por hora extra.
-  // PERNOCTADA: $3.885 por hora extra/pernoctada.
-  const valorExtraAplicado = Number(v.pernoHora)||0;
-  const totalExtras=extraMin/60*valorExtraAplicado;
-  const total=baseTotal+totalExtras;
-  const basico=basicoDeCategoria(v,categoria);
-
-  ultimo={
-    fecha:document.getElementById('fecha').value||new Date().toISOString().slice(0,10),
-    mes,baseTomada:document.getElementById('baseTomada').value,baseFinalizada:document.getElementById('baseFinalizada').value,
-    tipo:tipo.toUpperCase(),categoria,categoriaNombre:NOMBRES_CATEGORIA[categoria],inicio,fin,descanso,trabajadas,presencia,extraMin,
-    valorExtra:money(valorExtraAplicado)+'/h',descansoViatico,totalExtras,valor:valorTexto,baseTotal,total,basicoCategoria:basico,valoresAplicados:{...v,basicos:{...(v.basicos||{})}}
-  };
-
-  document.getElementById('presencia').textContent=fmt(presencia);
-  document.getElementById('descanso').textContent=fmt(descanso);
-  document.getElementById('trabajadas').textContent=fmt(trabajadas);
-  document.getElementById('extras').textContent=fmt(extraMin);
-  document.getElementById('valorExtras').textContent=money(totalExtras);
-  document.getElementById('descansoViatico').textContent=tipo==='pernoctada'?fmt(descanso):'0 h 0 min';
-  document.getElementById('valorDescansoViatico').textContent=money(descansoViatico);
-  document.getElementById('valorAplicado').textContent=valorTexto+' · '+NOMBRES_CATEGORIA[categoria]+' · básico '+money(basico);
-  document.getElementById('total').textContent=money(total);
-  return ultimo;
+if(!inicio||!fin){
+alert('Ingresá la hora de inicio y finalización.');
+return null;
 }
 
-function guardar(){const r=calcular();if(!r)return;registros.push(r);localStorage.setItem(CLAVE_REGISTROS,JSON.stringify(registros));render();alert('Servicio guardado correctamente.')}
+const tipo=document.getElementById('tipo').value;
+const categoria=document.getElementById('categoria').value;
+const mes=mesActual();
+const v=valoresDeServicio();
+
+const presencia=minutosEntre(inicio,fin);
+
+const descanso=Math.max(
+0,
+Number(document.getElementById('descH').value||0)*60+
+Number(document.getElementById('descM').value||0)
+);
+
+let trabajadas;
+
+if(tipo==='pernoctada'){
+
+trabajadas=presencia;
+
+}else{
+
+if(descanso>presencia){
+alert('En un servicio LOCAL, el descanso no puede superar el tiempo total de presencia.');
+return null;
+}
+
+trabajadas=presencia-descanso;
+}
+
+const extraMin=Math.max(
+0,
+Number(document.getElementById('extraH').value||0)*60+
+Number(document.getElementById('extraM').value||0)
+);
+
+let baseTotal=0,
+descansoViatico=0,
+valorTexto='';
+
+if(tipo==='local'){
+
+// LOCAL = valor fijo por servicio.
+baseTotal=Number(v.local)||0;
+valorTexto=money(v.local)+' por servicio';
+
+}else{
+
+// PERNOCTADA = diario + horas de servicio + descanso como viático.
+
+descansoViatico=
+descanso/60*(Number(v.pernoHora)||0);
+
+baseTotal=
+(Number(v.pernoctada)||0)+
+(trabajadas/60*(Number(v.pernoHora)||0))+
+descansoViatico;
+
+valorTexto=
+money(v.pernoctada)+' + '+
+money(v.pernoHora)+'/h + descanso';
+}
+
+// HORAS EXTRAS
+// LOCAL: $20.990 por hora extra.
+// PERNOCTADA: $3.885 por hora extra.
+
+let valorExtraAplicado;
+
+if(tipo==='local'){
+valorExtraAplicado=Number(v.local)||0;
+}else{
+valorExtraAplicado=Number(v.pernoHora)||0;
+}
+
+const totalExtras=
+extraMin/60*valorExtraAplicado;
+
+const total=baseTotal+totalExtras;
+
+const basico=basicoDeCategoria(v,categoria);
+
+ultimo={
+
+fecha:
+document.getElementById('fecha').value||
+new Date().toISOString().slice(0,10),
+
+mes,
+
+baseTomada:
+document.getElementById('baseTomada').value,
+
+baseFinalizada:
+document.getElementById('baseFinalizada').value,
+
+tipo:tipo.toUpperCase(),
+
+categoria,
+
+categoriaNombre:
+NOMBRES_CATEGORIA[categoria],
+
+inicio,
+fin,
+descanso,
+trabajadas,
+presencia,
+extraMin,
+
+valorExtra:
+money(valorExtraAplicado)+'/h',
+
+descansoViatico,
+totalExtras,
+
+valor:valorTexto,
+baseTotal,
+total,
+
+basicoCategoria:basico,
+
+valoresAplicados:{
+...v,
+basicos:{...(v.basicos||{})}
+}
+
+};
+
+document.getElementById('presencia').textContent=fmt(presencia);
+document.getElementById('descanso').textContent=fmt(descanso);
+document.getElementById('trabajadas').textContent=fmt(trabajadas);
+document.getElementById('extras').textContent=fmt(extraMin);
+document.getElementById('valorExtras').textContent=money(totalExtras);
+
+document.getElementById('descansoViatico').textContent=
+tipo==='pernoctada'?fmt(descanso):'0 h 0 min';
+
+document.getElementById('valorDescansoViatico').textContent=
+money(descansoViatico);
+
+document.getElementById('valorAplicado').textContent=
+valorTexto+
+' · '+
+NOMBRES_CATEGORIA[categoria]+
+' · básico '+
+money(basico);
+
+document.getElementById('total').textContent=
+money(total);
+
+return ultimo;
+}
+
+function guardar(){
+
+const r=calcular();
+
+if(!r)return;
+
+registros.push(r);
+
+localStorage.setItem(
+CLAVE_REGISTROS,
+JSON.stringify(registros)
+);
+
+render();
+
+alert('Servicio guardado correctamente.');
+}
+
 function normalizarRegistros(){
-  const antiguos=JSON.parse(localStorage.getItem('nca_registros_sep2026')||'[]');
-  if(antiguos.length&&!registros.length)registros=antiguos.map(r=>({...r,mes:r.mes||'2026-09',categoria:r.categoria||'ayudante',categoriaNombre:r.categoriaNombre||NOMBRES_CATEGORIA[r.categoria||'ayudante'],valoresAplicados:r.valoresAplicados||JSON.parse(JSON.stringify(VALORES_SEPTIEMBRE))}));
-  registros=registros.map(r=>({...r,mes:r.mes||(r.fecha?r.fecha.slice(0,7):'2026-09'),baseTomada:r.baseTomada||r.base||'',baseFinalizada:r.baseFinalizada||'',categoria:r.categoria||'ayudante',categoriaNombre:r.categoriaNombre||NOMBRES_CATEGORIA[r.categoria||'ayudante']}));
-  if(!valoresMensuales['2026-09'])valoresMensuales['2026-09']=JSON.parse(JSON.stringify(VALORES_SEPTIEMBRE));
-  localStorage.setItem(CLAVE_REGISTROS,JSON.stringify(registros));
-  localStorage.setItem(CLAVE_VALORES,JSON.stringify(valoresMensuales));
+
+const antiguos=
+JSON.parse(
+localStorage.getItem('nca_registros_sep2026')||'[]'
+);
+
+if(antiguos.length&&!registros.length)
+
+registros=antiguos.map(r=>({
+...r,
+mes:r.mes||'2026-09',
+categoria:r.categoria||'ayudante',
+categoriaNombre:
+r.categoriaNombre||
+NOMBRES_CATEGORIA[r.categoria||'ayudante'],
+
+valoresAplicados:
+r.valoresAplicados||
+JSON.parse(JSON.stringify(VALORES_SEPTIEMBRE))
+}));
+
+registros=registros.map(r=>({
+
+...r,
+
+mes:
+r.mes||
+(r.fecha?r.fecha.slice(0,7):'2026-09'),
+
+baseTomada:
+r.baseTomada||
+r.base||
+'',
+
+baseFinalizada:
+r.baseFinalizada||
+'',
+
+categoria:
+r.categoria||
+'ayudante',
+
+categoriaNombre:
+r.categoriaNombre||
+NOMBRES_CATEGORIA[r.categoria||'ayudante']
+
+}));
+
+if(!valoresMensuales['2026-09'])
+
+valoresMensuales['2026-09']=
+JSON.parse(JSON.stringify(VALORES_SEPTIEMBRE));
+
+localStorage.setItem(
+CLAVE_REGISTROS,
+JSON.stringify(registros)
+);
+
+localStorage.setItem(
+CLAVE_VALORES,
+JSON.stringify(valoresMensuales)
+);
 }
+
 function render(){
-  const tb=document.getElementById('tabla');tb.innerHTML='';
-  registros.forEach((r,i)=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${r.fecha}</td><td>${r.baseTomada||r.base||''}</td><td>${r.baseFinalizada||''}</td><td><span class="badge">${r.tipo}</span></td>
-    <td>${r.categoriaNombre||NOMBRES_CATEGORIA[r.categoria]||''}</td><td>${r.inicio}</td><td>${r.fin}</td><td>${fmt(r.descanso)}</td><td>${fmt(r.trabajadas)}</td>
-    <td>${money(r.descansoViatico||0)}</td><td>${fmt(r.extraMin||0)}</td><td>${money(r.totalExtras||0)}</td><td><b>${money(r.total)}</b></td>
-    <td><button class="danger" style="padding:7px" onclick="eliminar(${i})">X</button></td>`;
-    tb.appendChild(tr);
-  });
+
+const tb=document.getElementById('tabla');
+
+tb.innerHTML='';
+
+registros.forEach((r,i)=>{
+
+const tr=document.createElement('tr');
+
+tr.innerHTML=`
+
+<td>${r.fecha}</td>
+
+<td>${r.baseTomada||r.base||''}</td>
+
+<td>${r.baseFinalizada||''}</td>
+
+<td><span class="badge">${r.tipo}</span></td>
+
+<td>
+${r.categoriaNombre||
+NOMBRES_CATEGORIA[r.categoria]||
+''}
+</td>
+
+<td>${r.inicio}</td>
+
+<td>${r.fin}</td>
+
+<td>${fmt(r.descanso)}</td>
+
+<td>${fmt(r.trabajadas)}</td>
+
+<td>${money(r.descansoViatico||0)}</td>
+
+<td>${fmt(r.extraMin||0)}</td>
+
+<td>${money(r.totalExtras||0)}</td>
+
+<td><b>${money(r.total)}</b></td>
+
+<td>
+<button
+class="danger"
+style="padding:7px"
+onclick="eliminar(${i})">
+X
+</button>
+</td>
+
+`;
+
+tb.appendChild(tr);
+
+});
 }
-function eliminar(i){registros.splice(i,1);localStorage.setItem(CLAVE_REGISTROS,JSON.stringify(registros));render()}
+
+function eliminar(i){
+
+registros.splice(i,1);
+
+localStorage.setItem(
+CLAVE_REGISTROS,
+JSON.stringify(registros)
+);
+
+render();
+}
+
 function exportarCSV(){
-  if(!registros.length){alert('No hay servicios registrados.');return}
-  const rows=[['Mes','Fecha','Base tomada','Base dejada/finalizada','Tipo','Categoría','Básico categoría','Inicio','Fin','Presencia (min)','Descanso (min)','Trabajadas (min)','Descanso viático','Extras (min)','Valor hora extra','Valor aplicado','Valor extras','Total']];
-  registros.forEach(r=>rows.push([r.mes||'',r.fecha,r.baseTomada||r.base||'',r.baseFinalizada||'',r.tipo,r.categoriaNombre||'',Math.round(r.basicoCategoria||0),r.inicio,r.fin,r.presencia,r.descanso,r.trabajadas,Math.round(r.descansoViatico||0),r.extraMin||0,r.valorExtra||'',r.valor,Math.round(r.totalExtras||0),Math.round(r.total)]));
-  const csv=rows.map(x=>x.map(v=>`"${String(v).replaceAll('"','""')}"`).join(';')).join('\n');
-  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='control_horas_NCA.csv';a.click();
+
+if(!registros.length){
+alert('No hay servicios registrados.');
+return;
 }
-function limpiarTodo(){if(confirm('¿Borrar todos los servicios registrados?')){registros=[];localStorage.removeItem(CLAVE_REGISTROS);render()}}
+
+const rows=[[
+'Mes',
+'Fecha',
+'Base tomada',
+'Base dejada/finalizada',
+'Tipo',
+'Categoría',
+'Básico categoría',
+'Inicio',
+'Fin',
+'Presencia (min)',
+'Descanso (min)',
+'Trabajadas (min)',
+'Descanso viático',
+'Extras (min)',
+'Valor hora extra',
+'Valor aplicado',
+'Valor extras',
+'Total'
+]];
+
+registros.forEach(r=>rows.push([
+
+r.mes||'',
+r.fecha,
+r.baseTomada||r.base||'',
+r.baseFinalizada||'',
+r.tipo,
+r.categoriaNombre||'',
+Math.round(r.basicoCategoria||0),
+r.inicio,
+r.fin,
+r.presencia,
+r.descanso,
+r.trabajadas,
+Math.round(r.descansoViatico||0),
+r.extraMin||0,
+r.valorExtra||'',
+r.valor,
+Math.round(r.totalExtras||0),
+Math.round(r.total)
+
+]));
+
+const csv=
+rows.map(x=>
+x.map(v=>
+`"${String(v).replaceAll('"','""')}"`
+).join(';')
+).join('\n');
+
+const blob=
+new Blob(
+['\ufeff'+csv],
+{type:'text/csv;charset=utf-8'}
+);
+
+const a=document.createElement('a');
+
+a.href=URL.createObjectURL(blob);
+
+a.download='control_horas_NCA.csv';
+
+a.click();
+}
+
+function limpiarTodo(){
+
+if(confirm('¿Borrar todos los servicios registrados?')){
+
+registros=[];
+
+localStorage.removeItem(CLAVE_REGISTROS);
+
+render();
+
+}
+}
+
 normalizarRegistros();
 
 document.getElementById('fecha').value='2026-09-28';
+
 document.getElementById('mesValores').value='2026-09';
+
+cargarValoresMes();
+
+actualizarSubtitulo();
+
+document.getElementById('fecha').addEventListener(
+'change',
+()=>{
+document.getElementById('mesValores').value=mesActual();
 cargarValoresMes();
 actualizarSubtitulo();
-document.getElementById('fecha').addEventListener('change',()=>{document.getElementById('mesValores').value=mesActual();cargarValoresMes();actualizarSubtitulo()});
-document.getElementById('mesValores').addEventListener('change',cargarValoresMes);
+}
+);
+
+document.getElementById('mesValores').addEventListener(
+'change',
+cargarValoresMes
+);
+
 render();
+
 </script>
+
 <script>
-if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+
+if('serviceWorker' in navigator){
+
+window.addEventListener(
+'load',
+()=>{
+navigator.serviceWorker
+.register('sw.js')
+.catch(()=>{});
+}
+);
+
+}
+
 </script>
+
 </body>
 </html>
