@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control de Horas NCA - Septiembre 2026</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#f3f5f7;margin:0;padding:18px;color:#17202a}
+.container{max-width:1050px;margin:auto}
+.card{background:white;border-radius:18px;padding:22px;margin-bottom:18px;box-shadow:0 4px 18px rgba(0,0,0,.08)}
+h1{margin:0 0 6px;font-size:25px}
+h2{font-size:19px;margin:0 0 15px}
+.sub{color:#667085;margin-bottom:18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:13px}
+label{font-weight:700;font-size:13px;display:block;margin-bottom:6px}
+input,select,button{width:100%;padding:11px;border:1px solid #d0d5dd;border-radius:10px;font-size:15px;background:#fff}
+button{border:0;background:#17202a;color:#fff;font-weight:700;cursor:pointer}
+button.secondary{background:#667085}
+button.danger{background:#b42318}
+.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:15px}
+.result{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.box{background:#f8fafc;border-radius:12px;padding:14px}
+.box small{display:block;color:#667085;margin-bottom:5px}
+.box strong{font-size:21px}
+.total{background:#eef4ff}
+.total strong{font-size:27px}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:900px}
+th,td{padding:10px 8px;border-bottom:1px solid #eaecf0;text-align:left;font-size:13px}
+th{background:#f8fafc}
+.note{font-size:12px;color:#667085;margin-top:10px;line-height:1.45}
+.badge{display:inline-block;padding:4px 8px;border-radius:99px;background:#eef2f6;font-size:12px;font-weight:700}
+@media(max-width:600px){body{padding:10px}.card{padding:16px;border-radius:14px}}
+</style>
+<style>
+.nca-brand{
+  max-width:1050px;margin:0 auto 14px;padding:12px 16px;
+  display:flex;align-items:center;gap:12px;
+  background:#14245f;border-radius:16px;color:#fff;
+  box-shadow:0 4px 18px rgba(0,0,0,.08);
+}
+.nca-mark{
+  font-weight:900;font-size:31px;letter-spacing:-3px;
+  line-height:1;background:#14245f;color:#fff;
+}
+.nca-name{font-weight:800;font-size:13px;letter-spacing:.6px}
+@media(max-width:600px){
+  .nca-brand{margin:0 10px 10px;padding:10px 13px}
+  .nca-mark{font-size:27px}.nca-name{font-size:11px}
+}
+</style>
+
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#14245f">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+</head>
+<body>
+
+<div class="nca-brand" aria-label="Nuevo Central Argentino">
+  <div class="nca-mark">NCA</div>
+  <div class="nca-name">NUEVO CENTRAL ARGENTINO</div>
+</div>
+
+<div class="container">
+  <div class="card">
+    <h1>🚆 Control de Horas NCA</h1>
+    <div class="sub">Septiembre 2026 · horas trabajadas, descansos, bases y liquidación</div>
+
+    <h2>Cargar servicio</h2>
+    <div class="grid">
+      <div><label>Fecha</label><input id="fecha" type="date"></div>
+      <div><label>Base de tomada</label>
+        <select id="baseTomada">
+          <option>CEVIL POZO</option>
+          <option>LA BANDA</option>
+          <option>COLONIA DORA</option>
+          <option>CERES</option>
+          <option>RAFAELA</option>
+        </select>
+      </div>
+      <div><label>Base de dejada / finalizada</label>
+        <select id="baseFinalizada">
+          <option>CEVIL POZO</option>
+          <option>LA BANDA</option>
+          <option>COLONIA DORA</option>
+          <option>CERES</option>
+          <option>RAFAELA</option>
+        </select>
+      </div>
+      <div><label>Tipo de servicio</label>
+        <select id="tipo" onchange="actualizarTipo()">
+          <option value="local">LOCAL</option>
+          <option value="pernoctada">PERNOCTADA</option>
+        </select>
+      </div>
+      <div><label>Hora de inicio</label><input id="inicio" type="time"></div>
+      <div><label>Hora de finalización</label><input id="fin" type="time"></div>
+      <div><label>Horas de descanso / viático</label><input id="descH" type="number" min="0" step="1" value="0"></div>
+      <div><label>Minutos de descanso / viático</label><input id="descM" type="number" min="0" max="59" step="1" value="0"></div>
+      <div><label>Horas adicionales / extras</label><input id="extraH" type="number" min="0" step="1" value="0"></div>
+      <div><label>Minutos adicionales / extras</label><input id="extraM" type="number" min="0" max="59" step="1" value="0"></div>
+    </div>
+
+    <div class="actions">
+      <button onclick="calcular()">Calcular servicio</button>
+      <button class="secondary" onclick="guardar()">Guardar servicio</button>
+      <button class="secondary" onclick="exportarCSV()">Exportar CSV</button>
+      <button class="danger" onclick="limpiarTodo()">Borrar registros</button>
+    </div>
+
+    <div class="result" style="margin-top:16px">
+      <div class="box"><small>Tiempo total de presencia</small><strong id="presencia">0 h 0 min</strong></div>
+      <div class="box"><small>Descanso</small><strong id="descanso">0 h 0 min</strong></div>
+      <div class="box"><small>Horas efectivas trabajadas</small><strong id="trabajadas">0 h 0 min</strong></div>
+      <div class="box"><small>Horas adicionales / extras</small><strong id="extras">0 h 0 min</strong></div>
+      <div class="box"><small>Valor extras</small><strong id="valorExtras">$0</strong></div>
+      <div class="box"><small>Descanso como viático</small><strong id="descansoViatico">0 h 0 min</strong></div>
+      <div class="box"><small>Viático por horas</small><strong id="valorDescansoViatico">$0</strong></div>
+      <div class="box"><small>Valor aplicado</small><strong id="valorAplicado">$0</strong></div>
+      <div class="box total"><small>Total del servicio</small><strong id="total">$0</strong></div>
+    </div>
+
+    <div class="note">
+      Valores de septiembre cargados: <b>hora local $20.990</b> ·
+      <b>pernoctada diaria $93.261</b> ·
+      <b>hora de pernoctada $3.885</b> · traslado $1.623 · básico $1.461.876.
+      Los valores quedan editables desde “Valores”.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>💰 Valores de septiembre 2026</h2>
+    <div class="grid">
+      <div><label>Hora local</label><input id="vLocal" type="number" value="20990"></div>
+      <div><label>Pernoctada diaria</label><input id="vPernoctada" type="number" value="93261"></div>
+      <div><label>Hora de pernoctada</label><input id="vPernoHora" type="number" value="3885"></div>
+      <div><label>Valor hora adicional / extra</label><input id="vExtra" type="number" value="20990"></div>
+      <div><label>Traslado</label><input id="vTraslado" type="number" value="1623"></div>
+      <div><label>Sueldo básico</label><input id="vBasico" type="number" value="1461876"></div>
+    </div>
+    <div class="note">
+      Para un servicio LOCAL, el descanso se descuenta de la presencia y el total se calcula por horas/minutos efectivos × valor de hora local.
+      Para PERNOCTADA se toma la pernoctada diaria + las horas del tramo de servicio × valor horario + las horas de descanso cargadas aparte como viático de pernoctada.
+      En PERNOCTADA el descanso NO se limita por el tiempo de presencia: por ejemplo, 8 h de servicio + 14 h de descanso es válido.
+      Las horas adicionales/extras se cargan aparte y se suman al total según el valor de hora adicional configurado.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📋 Servicios registrados</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>Fecha</th><th>Base tomada</th><th>Base dejada / finalizada</th><th>Servicio</th><th>Inicio</th><th>Fin</th>
+          <th>Descanso</th><th>Trabajadas</th><th>Descanso viático</th><th>Extras</th><th>Valor extras</th><th>Total</th><th></th>
+        </tr></thead>
+        <tbody id="tabla"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+let registros = JSON.parse(localStorage.getItem('nca_registros_sep2026') || '[]');
+let ultimo = null;
+
+function money(n){return '$'+Math.round(n).toLocaleString('es-AR')}
+function minutosEntre(inicio, fin){
+  let [h1,m1]=inicio.split(':').map(Number), [h2,m2]=fin.split(':').map(Number);
+  let a=h1*60+m1,b=h2*60+m2;
+  if(b<a)b+=1440;
+  return b-a;
+}
+function fmt(min){
+  min=Math.max(0,Math.round(min));
+  return Math.floor(min/60)+' h '+(min%60)+' min';
+}
+function calcular(){
+  const inicio=document.getElementById('inicio').value, fin=document.getElementById('fin').value;
+  if(!inicio||!fin){alert('Ingresá la hora de inicio y finalización.');return null}
+  let presencia=minutosEntre(inicio,fin);
+  let descanso=Math.max(0,Number(document.getElementById('descH').value||0)*60+Number(document.getElementById('descM').value||0));
+
+  const tipo=document.getElementById('tipo').value;
+
+  // LOCAL: el descanso se descuenta de las horas de presencia.
+  // PERNOCTADA: el descanso se carga APARTE como viático/pernoctada.
+  // Por eso puede ser mayor que el tramo trabajado (ej.: 8 h de servicio + 14 h de descanso).
+  let trabajadas;
+  if(tipo==='pernoctada'){
+    trabajadas=presencia;
+  }else{
+    if(descanso>presencia){
+      alert('En un servicio LOCAL, el descanso no puede superar el tiempo total de presencia.');
+      return null;
+    }
+    trabajadas=presencia-descanso;
+  }
+
+  let extraMin=Math.max(0,Number(document.getElementById('extraH').value||0)*60+Number(document.getElementById('extraM').value||0));
+  const vLocal=Number(document.getElementById('vLocal').value||0);
+  const vPer=Number(document.getElementById('vPernoctada').value||0);
+  const vPerHora=Number(document.getElementById('vPernoHora').value||0);
+  const vExtra=Number(document.getElementById('vExtra').value||0);
+
+  let baseTotal, valorTexto, descansoViatico=0;
+
+  if(tipo==='local'){
+    baseTotal=trabajadas/60*vLocal;
+    valorTexto=money(vLocal)+'/h';
+  }else{
+    // PERNOCTADA:
+    // - se paga la pernoctada diaria;
+    // - se pagan las horas del tramo de servicio;
+    // - el descanso se SUMA aparte como viático de pernoctada.
+    descansoViatico=descanso/60*vPerHora;
+    baseTotal=vPer+(trabajadas/60*vPerHora)+descansoViatico;
+    valorTexto=money(vPer)+' + '+money(vPerHora)+'/h + descanso';
+  }
+
+  const totalExtras=extraMin/60*vExtra;
+  const total=baseTotal+totalExtras;
+
+  ultimo={
+    fecha:document.getElementById('fecha').value || new Date().toISOString().slice(0,10),
+    baseTomada:document.getElementById('baseTomada').value,
+    baseFinalizada:document.getElementById('baseFinalizada').value,
+    tipo:tipo.toUpperCase(),
+    inicio,fin,
+    descanso,
+    trabajadas,
+    presencia,
+    extraMin,
+    valorExtra:money(vExtra)+'/h',
+    descansoViatico,
+    totalExtras,
+    valor:valorTexto,
+    baseTotal,
+    total
+  };
+
+  document.getElementById('presencia').textContent=fmt(presencia);
+  document.getElementById('descanso').textContent=fmt(descanso);
+  document.getElementById('trabajadas').textContent=fmt(trabajadas);
+  document.getElementById('extras').textContent=fmt(extraMin);
+  document.getElementById('valorExtras').textContent=money(totalExtras);
+  document.getElementById('descansoViatico').textContent=(tipo==='pernoctada' ? fmt(descanso) : '0 h 0 min');
+  document.getElementById('valorDescansoViatico').textContent=money(descansoViatico);
+  document.getElementById('valorAplicado').textContent=valorTexto;
+  document.getElementById('total').textContent=money(total);
+  return ultimo;
+}
+function guardar(){
+  const r=calcular(); if(!r)return;
+  registros.push(r);
+  localStorage.setItem('nca_registros_sep2026',JSON.stringify(registros));
+  render();
+  alert('Servicio guardado correctamente.');
+}
+function normalizarRegistros(){
+  registros=registros.map(r=>({
+    ...r,
+    baseTomada:r.baseTomada || r.base || '',
+    baseFinalizada:r.baseFinalizada || ''
+  }));
+  localStorage.setItem('nca_registros_sep2026',JSON.stringify(registros));
+}
+normalizarRegistros();
+
+function render(){
+  const tb=document.getElementById('tabla'); tb.innerHTML='';
+  registros.forEach((r,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${r.fecha}</td><td>${r.baseTomada || r.base || ''}</td><td>${r.baseFinalizada || ''}</td><td><span class="badge">${r.tipo}</span></td>
+    <td>${r.inicio}</td><td>${r.fin}</td><td>${fmt(r.descanso)}</td><td>${fmt(r.trabajadas)}</td>
+    <td>${money(r.descansoViatico||0)}</td><td>${fmt(r.extraMin||0)}</td><td>${money(r.totalExtras||0)}</td><td><b>${money(r.total)}</b></td>
+    <td><button class="danger" style="padding:7px" onclick="eliminar(${i})">X</button></td>`;
+    tb.appendChild(tr);
+  });
+}
+function eliminar(i){
+  registros.splice(i,1);
+  localStorage.setItem('nca_registros_sep2026',JSON.stringify(registros));
+  render();
+}
+function exportarCSV(){
+  if(!registros.length){alert('No hay servicios registrados.');return}
+  const rows=[['Fecha','Base tomada','Base dejada/finalizada','Tipo','Inicio','Fin','Presencia (min)','Descanso (min)','Trabajadas (min)','Descanso viático','Extras (min)','Valor hora extra','Valor aplicado','Valor extras','Total']];
+  registros.forEach(r=>rows.push([r.fecha,r.baseTomada || r.base || '',r.baseFinalizada || '',r.tipo,r.inicio,r.fin,r.presencia,r.descanso,r.trabajadas,Math.round(r.descansoViatico||0),r.extraMin||0,r.valorExtra||'',r.valor,Math.round(r.totalExtras||0),Math.round(r.total)]));
+  const csv=rows.map(x=>x.map(v=>`"${String(v).replaceAll('"','""')}"`).join(';')).join('\\n');
+  const blob=new Blob(['\\ufeff'+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='control_horas_NCA_septiembre_2026.csv';a.click();
+}
+function limpiarTodo(){
+  if(confirm('¿Borrar todos los servicios registrados?')){
+    registros=[];localStorage.removeItem('nca_registros_sep2026');render();
+  }
+}
+function actualizarTipo(){}
+render();
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+</script>
+</body>
+</html>
