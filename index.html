@@ -333,15 +333,22 @@ return f?f.slice(0,7):'2026-09'
 function nombreMes(m){
 if(!m)return '';
 const [y,mm]=m.split('-').map(Number);
-const n=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const n=[
+'Enero','Febrero','Marzo','Abril','Mayo','Junio',
+'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'
+];
 return n[mm-1]+' '+y
 }
 
 function minutosEntre(a,b){
 let [h1,m1]=a.split(':').map(Number),
 [h2,m2]=b.split(':').map(Number);
-let x=h1*60+m1,y=h2*60+m2;
+
+let x=h1*60+m1,
+y=h2*60+m2;
+
 if(y<x)y+=1440;
+
 return y-x
 }
 
@@ -351,9 +358,15 @@ return Math.floor(min/60)+' h '+(min%60)+' min'
 }
 
 function valoresBaseParaMes(mes){
-if(valoresMensuales[mes])return {...valoresMensuales[mes]};
+
+if(valoresMensuales[mes])
+return {...valoresMensuales[mes]};
+
 const meses=Object.keys(valoresMensuales).sort();
-if(meses.length)return {...valoresMensuales[meses[meses.length-1]]};
+
+if(meses.length)
+return {...valoresMensuales[meses[meses.length-1]]};
+
 return JSON.parse(JSON.stringify(VALORES_SEPTIEMBRE));
 }
 
@@ -362,11 +375,16 @@ return valoresBaseParaMes(mesActual());
 }
 
 function basicoDeCategoria(v,categoria){
+
 if(v.basicos && v.basicos[categoria]!=null)
 return Number(v.basicos[categoria]);
 
-if(categoria==='conductor')return 1875963;
-if(categoria==='ayudante_habilitado')return 1644339;
+if(categoria==='conductor')
+return 1875963;
+
+if(categoria==='ayudante_habilitado')
+return 1644339;
+
 return 1461876;
 }
 
@@ -427,7 +445,7 @@ function actualizarSubtitulo(){
 
 document.getElementById('subtituloMes').textContent=
 nombreMes(mesActual())+
-' · horas trabajadas, descansos, bases y liquidación';
+' · horas trabajadas, descansos, bases y liquidación'
 }
 
 function calcular(){
@@ -437,7 +455,7 @@ fin=document.getElementById('fin').value;
 
 if(!inicio||!fin){
 alert('Ingresá la hora de inicio y finalización.');
-return null;
+return null
 }
 
 const tipo=document.getElementById('tipo').value;
@@ -462,8 +480,10 @@ trabajadas=presencia;
 }else{
 
 if(descanso>presencia){
-alert('En un servicio LOCAL, el descanso no puede superar el tiempo total de presencia.');
-return null;
+alert(
+'En un servicio LOCAL, el descanso no puede superar el tiempo total de presencia.'
+);
+return null
 }
 
 trabajadas=presencia-descanso;
@@ -481,13 +501,13 @@ valorTexto='';
 
 if(tipo==='local'){
 
-// LOCAL = valor fijo por servicio.
+// LOCAL = valor fijo por servicio. Las horas solo se controlan.
 baseTotal=Number(v.local)||0;
 valorTexto=money(v.local)+' por servicio';
 
 }else{
 
-// PERNOCTADA = diario + horas de servicio + descanso como viático.
+// PERNOCTADA = diario + horas de servicio a $3.885/h + descanso a $3.885/h.
 
 descansoViatico=
 descanso/60*(Number(v.pernoHora)||0);
@@ -502,24 +522,29 @@ money(v.pernoctada)+' + '+
 money(v.pernoHora)+'/h + descanso';
 }
 
-// HORAS EXTRAS
+// Las horas extras dependen del tipo de servicio:
 // LOCAL: $20.990 por hora extra.
-// PERNOCTADA: $3.885 por hora extra.
+// PERNOCTADA: $3.885 por hora extra/pernoctada.
 
 let valorExtraAplicado;
 
 if(tipo==='local'){
+
 valorExtraAplicado=Number(v.local)||0;
+
 }else{
+
 valorExtraAplicado=Number(v.pernoHora)||0;
 }
 
 const totalExtras=
 extraMin/60*valorExtraAplicado;
 
-const total=baseTotal+totalExtras;
+const total=
+baseTotal+totalExtras;
 
-const basico=basicoDeCategoria(v,categoria);
+const basico=
+basicoDeCategoria(v,categoria);
 
 ultimo={
 
@@ -543,20 +568,28 @@ categoriaNombre:
 NOMBRES_CATEGORIA[categoria],
 
 inicio,
+
 fin,
+
 descanso,
+
 trabajadas,
+
 presencia,
+
 extraMin,
 
 valorExtra:
 money(valorExtraAplicado)+'/h',
 
 descansoViatico,
+
 totalExtras,
 
 valor:valorTexto,
+
 baseTotal,
+
 total,
 
 basicoCategoria:basico,
@@ -568,11 +601,20 @@ basicos:{...(v.basicos||{})}
 
 };
 
-document.getElementById('presencia').textContent=fmt(presencia);
-document.getElementById('descanso').textContent=fmt(descanso);
-document.getElementById('trabajadas').textContent=fmt(trabajadas);
-document.getElementById('extras').textContent=fmt(extraMin);
-document.getElementById('valorExtras').textContent=money(totalExtras);
+document.getElementById('presencia').textContent=
+fmt(presencia);
+
+document.getElementById('descanso').textContent=
+fmt(descanso);
+
+document.getElementById('trabajadas').textContent=
+fmt(trabajadas);
+
+document.getElementById('extras').textContent=
+fmt(extraMin);
+
+document.getElementById('valorExtras').textContent=
+money(totalExtras);
 
 document.getElementById('descansoViatico').textContent=
 tipo==='pernoctada'?fmt(descanso):'0 h 0 min';
@@ -621,9 +663,13 @@ localStorage.getItem('nca_registros_sep2026')||'[]'
 if(antiguos.length&&!registros.length)
 
 registros=antiguos.map(r=>({
+
 ...r,
+
 mes:r.mes||'2026-09',
+
 categoria:r.categoria||'ayudante',
+
 categoriaNombre:
 r.categoriaNombre||
 NOMBRES_CATEGORIA[r.categoria||'ayudante'],
@@ -631,6 +677,7 @@ NOMBRES_CATEGORIA[r.categoria||'ayudante'],
 valoresAplicados:
 r.valoresAplicados||
 JSON.parse(JSON.stringify(VALORES_SEPTIEMBRE))
+
 }));
 
 registros=registros.map(r=>({
@@ -642,17 +689,13 @@ r.mes||
 (r.fecha?r.fecha.slice(0,7):'2026-09'),
 
 baseTomada:
-r.baseTomada||
-r.base||
-'',
+r.baseTomada||r.base||'',
 
 baseFinalizada:
-r.baseFinalizada||
-'',
+r.baseFinalizada||'',
 
 categoria:
-r.categoria||
-'ayudante',
+r.categoria||'ayudante',
 
 categoriaNombre:
 r.categoriaNombre||
@@ -694,12 +737,13 @@ tr.innerHTML=`
 
 <td>${r.baseFinalizada||''}</td>
 
-<td><span class="badge">${r.tipo}</span></td>
+<td>
+<span class="badge">${r.tipo}</span>
+</td>
 
 <td>
 ${r.categoriaNombre||
-NOMBRES_CATEGORIA[r.categoria]||
-''}
+NOMBRES_CATEGORIA[r.categoria]||''}
 </td>
 
 <td>${r.inicio}</td>
@@ -716,7 +760,9 @@ NOMBRES_CATEGORIA[r.categoria]||
 
 <td>${money(r.totalExtras||0)}</td>
 
-<td><b>${money(r.total)}</b></td>
+<td>
+<b>${money(r.total)}</b>
+</td>
 
 <td>
 <button
@@ -749,11 +795,15 @@ render();
 function exportarCSV(){
 
 if(!registros.length){
+
 alert('No hay servicios registrados.');
-return;
+
+return
 }
 
-const rows=[[
+const rows=[
+
+[
 'Mes',
 'Fecha',
 'Base tomada',
@@ -772,7 +822,9 @@ const rows=[[
 'Valor aplicado',
 'Valor extras',
 'Total'
-]];
+]
+
+];
 
 registros.forEach(r=>rows.push([
 
@@ -798,11 +850,13 @@ Math.round(r.total)
 ]));
 
 const csv=
-rows.map(x=>
+rows
+.map(x=>
 x.map(v=>
 `"${String(v).replaceAll('"','""')}"`
 ).join(';')
-).join('\n');
+)
+.join('\n');
 
 const blob=
 new Blob(
@@ -812,9 +866,11 @@ new Blob(
 
 const a=document.createElement('a');
 
-a.href=URL.createObjectURL(blob);
+a.href=
+URL.createObjectURL(blob);
 
-a.download='control_horas_NCA.csv';
+a.download=
+'control_horas_NCA.csv';
 
 a.click();
 }
@@ -825,7 +881,9 @@ if(confirm('¿Borrar todos los servicios registrados?')){
 
 registros=[];
 
-localStorage.removeItem(CLAVE_REGISTROS);
+localStorage.removeItem(
+CLAVE_REGISTROS
+);
 
 render();
 
@@ -834,24 +892,30 @@ render();
 
 normalizarRegistros();
 
-document.getElementById('fecha').value='2026-09-28';
+document.getElementById('fecha').value=
+'2026-09-28';
 
-document.getElementById('mesValores').value='2026-09';
+document.getElementById('mesValores').value=
+'2026-09';
 
 cargarValoresMes();
 
 actualizarSubtitulo();
 
-document.getElementById('fecha').addEventListener(
-'change',
-()=>{
-document.getElementById('mesValores').value=mesActual();
-cargarValoresMes();
-actualizarSubtitulo();
-}
-);
+document.getElementById('fecha')
+.addEventListener('change',()=>{
 
-document.getElementById('mesValores').addEventListener(
+document.getElementById('mesValores').value=
+mesActual();
+
+cargarValoresMes();
+
+actualizarSubtitulo();
+
+});
+
+document.getElementById('mesValores')
+.addEventListener(
 'change',
 cargarValoresMes
 );
@@ -869,9 +933,9 @@ window.addEventListener(
 ()=>{
 navigator.serviceWorker
 .register('sw.js')
-.catch(()=>{});
+.catch(()=>{})
 }
-);
+)
 
 }
 
