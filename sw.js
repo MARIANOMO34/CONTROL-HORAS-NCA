@@ -1,4 +1,4 @@
-const CACHE_NAME = 'control-horas-nca-v5';
+const CACHE_NAME = 'control-horas-nca-v6';
 
 const ARCHIVOS = [
   './',
